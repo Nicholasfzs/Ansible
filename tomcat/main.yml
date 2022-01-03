@@ -1,55 +1,54 @@
 - hosts: host
   tasks:
-    # - name: Install java
-    #   become: yes
-    #   yum:
-    #     name: java-1.8.0-openjdk-headless
-    #     state: present
+    - name: Install java
+      become: yes
+      yum:
+        name: java-1.8.0-openjdk-headless
+        state: present
 
-    # - name: Install tomcat
-    #   become: yes
-    #   get_url:
-    #     url: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
-    #     dest: /var/www/
+    - name: Install tomcat
+      become: yes
+      get_url:
+        url: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
+        dest: /var/www/
     
-    # - name: Create tomcat directory
-    #   become: yes
-    #   command: mkdir /usr/local/tomcat
+    - name: Create tomcat directory
+      become: yes
+      command: mkdir /usr/local/tomcat
 
-    # - name: Unarchive tomcat
-    #   become: yes
-    #   command: tar xvf /var/www/apache-tomcat-9.0.56.tar.gz --strip-components=1 -C /usr/local/tomcat
+    - name: Unarchive tomcat
+      become: yes
+      command: tar xvf /var/www/apache-tomcat-9.0.56.tar.gz --strip-components=1 -C /usr/local/tomcat
 
-    # - name: Symbolic link tomcat
-    #   become: yes
-    #   command: ln -s /var/www/apache-tomcat-9.0.56 /usr/local/tomcat/tomcat
+    - name: Symbolic link tomcat
+      become: yes
+      command: ln -s /var/www/apache-tomcat-9.0.56 /usr/local/tomcat/tomcat
 
-    # - name: Move tomcat.service
-      # become: yes
-      # command: mv /var/www/html/etc/tomcat.service /etc/systemd/system/
+    - name: Move tomcat.service
+      become: yes
+      command: mv /var/www/html/etc/tomcat.service /etc/systemd/system/
 
-    # - name: Restart php-fpm
-    #   become: yes
-    #   service:
-    #     name: php-fpm
-    #     state: restarted
+    - name: Restart php-fpm
+      become: yes
+      service:
+        name: php-fpm
+        state: restarted
 
+    - name: Create user and ownership
+      become: yes
+      command: useradd -r tomcat 
 
-    # - name: Create user and ownership
-    #   become: yes
-    #   command: useradd -r tomcat 
+    - name: Create user and ownership
+      become: yes
+      command: chown -R tomcat:tomcat /usr/local/tomcat
 
-    # - name: Create user and ownership
-    #   become: yes
-    #   command: chown -R tomcat:tomcat /usr/local/tomcat
+    - name: Reload daemon
+      become: yes
+      command: systemctl daemon-reload
 
-    # - name: Reload daemon
-    #   become: yes
-    #   command: systemctl daemon-reload
-
-    # - name: agora vai
-    #   become: yes
-    #   command: semanage permissive -a httpd_t
+    - name: agora vai
+      become: yes
+      command: semanage permissive -a httpd_t
 
     - name: Enable tomcat
       become: yes
@@ -58,8 +57,6 @@
     - name: Start tomcat
       become: yes
       command: systemctl start tomcat
-
-
 
     - name: Restart nginx
       become: yes
