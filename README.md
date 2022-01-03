@@ -1,4 +1,4 @@
 # Ansible
-Repositório os primeiros estudos sobre Ansible
+Repositório dos primeiros estudos sobre Ansible
 
 
