@@ -1,0 +1,61 @@
+- hosts: host
+  tasks:
+
+    - name: Move magento.conf to php-fpm
+      become: yes
+      command: cp /var/www/html/etc/magento.conf /etc/php-fpm.d/
+       
+       
+# {tenho que fazer na mao}
+    # - name: install composer
+    #   become: yes
+    #   command: curl -sS https://getcomposer.org/installer | php
+
+
+    - name: install epel latest
+      become: yes
+      dnf:
+        name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+        state: present
+
+    - name: install epel repo
+      become: yes
+      dnf:
+        name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+        state: present
+
+    - name: list php modules
+      become: yes
+      command:  dnf module list php
+
+    - name: enable php7:4
+      become: yes
+      command:  dnf module enable php:remi-7.4 -y
+
+    - name: install php
+      become: yes
+      command:  install php php-cli php-common
+
+    - name: move composer
+      become: yes
+      command:  mv composer.phar /usr/local/bin/composer
+
+    - name: Access magento directory
+      become: yes
+      command:  chmod -R 777 /var/www/html/magento
+      
+    - name: Start nginx
+      become: yes
+      service:
+        name: nginx
+        state: restarted
+
+#      {Tenho que fazer na mão} ou em shellscript
+    # - name: Update composer
+    #   become: yes
+    #   command: composer update  
+
+    # - name: Install composer
+    #   become: yes
+    #   command: composer install  
+

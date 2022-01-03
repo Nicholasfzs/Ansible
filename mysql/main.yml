@@ -1,0 +1,59 @@
+- hosts: host
+  tasks:
+    - name: Install mysql
+      become: yes
+      dnf: 
+        name: mysql-server
+        state: latest
+
+    - name: Install python3-PyMySQL library
+      become: yes
+      dnf:
+        name: python3-PyMySQL
+        state: present
+    
+    - name: Ensure mysql service is running
+      become: yes
+      systemd:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    - name: Set MySQL root Password
+      become: yes
+      mysql_user: 
+        login_password: ''
+        name: 'root'
+        password: ''
+        state: present
+
+
+    - name: Creates database for WordPress
+      become: yes
+      mysql_db:
+        name: wordpress
+        state: present
+      
+    
+    - name: Create user for Wordpress
+      become: yes
+      mysql_user:
+        name: wordpress
+        password: wordpress123
+        priv: '*.*:ALL'
+        state: present
+
+    - name: Creates database for Magento
+      become: yes
+      mysql_db:
+        name: magento
+        state: present
+      
+    
+    - name: Create user for Magento
+      become: yes
+      mysql_user:
+        name: magento
+        password: magento123
+        priv: '*.*:ALL'
+        state: present

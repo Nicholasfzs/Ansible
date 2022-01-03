@@ -1,0 +1,47 @@
+# Environment Setup
+
+- hosts: host
+  tasks:
+    - name: install dependencies 
+      become: yes
+      dnf: name={{ item }} update_cache=yes state=latest
+      loop: ['epel-release', 'git','python3', 'python2', 'php-fpm', 'php-mysqlnd', 'curl', 'unzip', 'php', 'php-cli', 'php-curl', 'php-sip', 'php-mbstring', 'php-mysqlnd', 'php-pecl-json', 'php-bcmath', 'php-gd', 'php-
+opcache', 'php-xml', 'php-soap', 'php-intl', 'php-mbstring', 'php-json', 'php-iconv', 'php-zip', 'wget', 'tar', 'java-1.8.0-openjdk-headless']
+
+    - name: Install nginx
+      become: yes
+      dnf:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: Start nginx
+      become: yes
+      service:
+        name: nginx
+        state: started
+
+    - name: Clone a github repository
+      become: yes
+      git:
+        repo: https://github.com/Nicholasfzs/acelerados1.git
+        dest: /var/www/html/
+        clone: yes
+        update: yes
+
+    - name: Move estatico to conf.d
+      become: yes
+      command: mv /var/www/html/estatico.conf /etc/nginx/conf.d
+
+    - name: Move magento to conf.d
+      become: yes
+      command: mv /var/www/html/magento.conf /etc/nginx/conf.d
+
+    - name: Move wordpress to conf.d
+      become: yes
+      command: mv /var/www/html/wordpress.conf /etc/nginx/conf.d
+
+    - name: Move tomcat to conf.d
+      become: yes
+      command: mv /var/www/html/tomcatapache.conf /etc/nginx/conf.d
+      
